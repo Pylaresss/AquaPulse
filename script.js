@@ -348,3 +348,50 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// ===== RANDOM SOLAR PANEL ALERT =====
+
+function randomPvAlert() {
+
+  const modal = document.getElementById("pvAlertModal");
+  const txt = document.getElementById("pvAlertText");
+
+  if (modal) {
+
+    txt.innerText =
+      "Solar panel power dropped unexpectedly.\n" +
+      "The panel may be covered or dusty.\n" +
+      "Please inspect and clean the panel.";
+
+    modal.classList.add("show");
+  }
+
+  // planifie la prochaine alerte aléatoire
+  scheduleNextAlert();
+}
+
+function scheduleNextAlert() {
+
+  const min = 120000;   // 2 minutes
+  const max = 160000;  // 3 minutes
+
+  const delay = Math.random() * (max - min) + min;
+
+  console.log("Next PV alert in", Math.round(delay/1000), "seconds");
+
+  setTimeout(randomPvAlert, delay);
+}
+
+// démarre le système d'alerte
+scheduleNextAlert();
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const pvModal = document.getElementById("pvAlertModal");
+  const closePvModal = document.getElementById("closePvModal");
+
+  closePvModal?.addEventListener("click", () => {
+    pvModal?.classList.remove("show");
+  });
+
+});

@@ -29,6 +29,7 @@
     <a href="#" class="navlink" data-page="history">📈 Sensors history</a>
     <a href="#" class="navlink" data-page="weather">🌦️ Weather forecast</a>
     <a href="#" class="navlink" data-page="plants">🌱 Plant profiles</a>
+    <a href="#" class="navlink" data-page="tank">💧 Water tank visual</a>
     <a href="#" class="navlink" data-page="about">ℹ️ About project</a>
     <button class="logout-btn" onclick="logout()">🚪 Logout</button>
   </nav>
@@ -239,9 +240,41 @@
             <button class="esp-btn" data-plant="Pepper">Update ESP</button>
           </div>
         </div>
+      </div>
     </section>
 
-    <!-- PAGE 5 : ABOUT -->
+    <!-- PAGE 5 : WATER TANK VISUAL -->
+    <section class="page" id="page-tank">
+      <div class="card big tank-page-card">
+        <h2>💧 Water tank visual</h2>
+        <p class="hint">Water tank simulation with manual increase and decrease.</p>
+
+        <div class="tank-visual-wrapper">
+          <div class="tank-visual">
+            <div class="tank-water" id="tankWater">
+              <div class="tank-wave wave1"></div>
+              <div class="tank-wave wave2"></div>
+            </div>
+          </div>
+
+          <div class="tank-info">
+            <h3 id="tankVisualPercent">50%</h3>
+            <p id="tankVisualStatus">Tank level is medium</p>
+          </div>
+
+          <div class="tank-controls">
+            <label for="tankAmount">Amount (%)</label>
+            <input type="number" id="tankAmount" min="1" max="100" value="10">
+            <div class="tank-buttons">
+              <button id="addWaterBtn">Add water</button>
+              <button id="removeWaterBtn">Remove water</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 6 : ABOUT -->
     <section class="page" id="page-about">
 
     <div class="card big">

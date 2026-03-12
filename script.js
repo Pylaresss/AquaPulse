@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     history: document.getElementById("page-history"),
     weather: document.getElementById("page-weather"),
     plants: document.getElementById("page-plants"),
+    tank: document.getElementById("page-tank"),
     about: document.getElementById("page-about"),
   };
 
@@ -65,6 +66,28 @@ const readAPIKey = "ES3N0P9JR628IAKY"; // leave "" if channel is public
 function setText(id, txt) {
   const el = document.getElementById(id);
   if (el) el.innerText = txt;
+}
+
+function updateTankVisual(percent) {
+  const tankWater = document.getElementById("tankWater");
+  const tankVisualPercent = document.getElementById("tankVisualPercent");
+  const tankVisualStatus = document.getElementById("tankVisualStatus");
+
+  if (!tankWater || !tankVisualPercent || !tankVisualStatus) return;
+  if (!Number.isFinite(percent)) return;
+
+  const safePercent = Math.max(0, Math.min(100, percent));
+
+  tankWater.style.height = `${safePercent}%`;
+  tankVisualPercent.innerText = `${safePercent.toFixed(0)}%`;
+
+  if (safePercent >= 70) {
+    tankVisualStatus.innerText = "Tank level is high";
+  } else if (safePercent >= 30) {
+    tankVisualStatus.innerText = "Tank level is medium";
+  } else {
+    tankVisualStatus.innerText = "Tank level is low";
+  }
 }
 
 async function updateData() {
@@ -150,6 +173,8 @@ async function updateData() {
   } catch (err) {
     console.error("updateData error:", err);
   }
+
+
 }
 
 // Initial fetch + auto refresh
@@ -394,4 +419,34 @@ document.addEventListener("DOMContentLoaded", () => {
     pvModal?.classList.remove("show");
   });
 
+});
+
+// ===================== WATER TANK SIMULATION =====================
+let simulatedTankLevel = 50;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const addWaterBtn = document.getElementById("addWaterBtn");
+  const removeWaterBtn = document.getElementById("removeWaterBtn");
+  const tankAmountInput = document.getElementById("tankAmount");
+
+  // Niveau initial
+  updateTankVisual(simulatedTankLevel);
+
+  function getInputAmount() {
+    const value = parseFloat(tankAmountInput?.value);
+    if (!Number.isFinite(value) || value <= 0) return 0;
+    return value;
+  }
+
+  addWaterBtn?.addEventListener("click", () => {
+    const amount = getInputAmount();
+    simulatedTankLevel = Math.min(100, simulatedTankLevel + amount);
+    updateTankVisual(simulatedTankLevel);
+  });
+
+  removeWaterBtn?.addEventListener("click", () => {
+    const amount = getInputAmount();
+    simulatedTankLevel = Math.max(0, simulatedTankLevel - amount);
+    updateTankVisual(simulatedTankLevel);
+  });
 });

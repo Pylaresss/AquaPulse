@@ -161,14 +161,19 @@ async function updateData() {
 
     // Simple irrigation logic (can be adjusted)
     // Example: irrigate only if soil dry, tank has water, and not too hot
-    let irrigation = "--";
-    if (!isNaN(soilMoisture) && !isNaN(tankDistance) && !isNaN(temperature)) {
-      const soilDry = soilMoisture < 35;
-      const tankOk = tankDistance <= 15;
-      const tempOk = temperature < 27;
-      irrigation = (soilDry && tankOk && tempOk) ? "ON" : "OFF";
-    }
-    setText("irrigation", irrigation);
+let irrigation = "--";
+
+if (!isNaN(soilMoisture)) {
+  if (soilMoisture < 35) {
+    irrigation = "Recommended : ON";
+ // } else if (soilMoisture < 50) {
+  //  irrigation = "Postponed";
+  } else {
+    irrigation = "OFF";
+  }
+}
+
+setText("irrigation", irrigation);
 
   } catch (err) {
     console.error("updateData error:", err);
@@ -237,32 +242,23 @@ function makeChart(canvasId, labels, values) {
 }
 
 async function renderHistory() {
-  const sel = document.getElementById("historyPoints");
-  const results = sel ? Number(sel.value) : 120;
+  const results = 120;
 
   const feeds = await fetchHistory(results);
 
   const s1 = buildSeries(feeds, "field1");
   const s2 = buildSeries(feeds, "field2");
   const s3 = buildSeries(feeds, "field3");
-  const s4 = buildSeries(feeds, "field4");
   const s5 = buildSeries(feeds, "field5");
 
   makeChart("c1", s1.labels, s1.values);
   makeChart("c2", s2.labels, s2.values);
   makeChart("c3", s3.labels, s3.values);
-  makeChart("c4", s4.labels, s4.values);
   makeChart("c5", s5.labels, s5.values);
 }
 
 // History controls
 document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("refreshHistory");
-  if (btn) btn.addEventListener("click", renderHistory);
-
-  const sel = document.getElementById("historyPoints");
-  if (sel) sel.addEventListener("change", renderHistory);
-
   // Auto-refresh when history page is visible
   setInterval(() => {
     const histPage = document.getElementById("page-history");
@@ -376,13 +372,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ===== RANDOM SOLAR PANEL ALERT =====
 
+let alertAlreadyShown = false;
+
 function randomPvAlert() {
+
+  // si déjà affichée → on arrête
+  if (alertAlreadyShown) return;
 
   const modal = document.getElementById("pvAlertModal");
   const txt = document.getElementById("pvAlertText");
 
   if (modal) {
-
     txt.innerText =
       "Solar panel power dropped unexpectedly.\n" +
       "The panel may be covered or dusty.\n" +
@@ -391,14 +391,16 @@ function randomPvAlert() {
     modal.classList.add("show");
   }
 
-  // planifie la prochaine alerte aléatoire
-  scheduleNextAlert();
+  // on marque comme déjà affichée
+  alertAlreadyShown = true;
 }
 
 function scheduleNextAlert() {
 
-  const min = 120000;   // 2 minutes
-  const max = 160000;  // 3 minutes
+  if (alertAlreadyShown) return; // stop total
+
+  const min = 60000;
+  const max = 120000;
 
   const delay = Math.random() * (max - min) + min;
 
@@ -422,15 +424,31 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ===================== WATER TANK SIMULATION =====================
+
+
+// ===================== WATER TANK SIMULATION =====================
 let simulatedTankLevel = 50;
+let tankMode = "automatic"; // automatic | manual
 
 document.addEventListener("DOMContentLoaded", () => {
   const addWaterBtn = document.getElementById("addWaterBtn");
   const removeWaterBtn = document.getElementById("removeWaterBtn");
   const tankAmountInput = document.getElementById("tankAmount");
+  const tankModeBtn = document.getElementById("tankModeBtn");
 
-  // Niveau initial
-  updateTankVisual(simulatedTankLevel);
+  function updateTankControlsState() {
+    const isManual = tankMode === "manual";
+
+    if (tankAmountInput) tankAmountInput.disabled = !isManual;
+    if (addWaterBtn) addWaterBtn.disabled = !isManual;
+    if (removeWaterBtn) removeWaterBtn.disabled = !isManual;
+
+    if (tankModeBtn) {
+      tankModeBtn.innerText = isManual ? "Manual" : "Automatic";
+      tankModeBtn.classList.toggle("manual", isManual);
+      tankModeBtn.classList.toggle("auto", !isManual);
+    }
+  }
 
   function getInputAmount() {
     const value = parseFloat(tankAmountInput?.value);
@@ -438,13 +456,26 @@ document.addEventListener("DOMContentLoaded", () => {
     return value;
   }
 
+  // Niveau initial
+  updateTankVisual(simulatedTankLevel);
+  updateTankControlsState();
+
+  tankModeBtn?.addEventListener("click", () => {
+    tankMode = tankMode === "automatic" ? "manual" : "automatic";
+    updateTankControlsState();
+  });
+
   addWaterBtn?.addEventListener("click", () => {
+    if (tankMode !== "manual") return;
+
     const amount = getInputAmount();
     simulatedTankLevel = Math.min(100, simulatedTankLevel + amount);
     updateTankVisual(simulatedTankLevel);
   });
 
   removeWaterBtn?.addEventListener("click", () => {
+    if (tankMode !== "manual") return;
+
     const amount = getInputAmount();
     simulatedTankLevel = Math.max(0, simulatedTankLevel - amount);
     updateTankVisual(simulatedTankLevel);

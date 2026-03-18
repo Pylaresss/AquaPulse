@@ -27,6 +27,7 @@
 
     <a href="#" class="navlink active" data-page="live">🏠 Dashboard</a>
     <a href="#" class="navlink" data-page="history">📈 Sensors history</a>
+    <a href="#" class="navlink" data-page="energy">⚡ Energy monitoring</a>
     <a href="#" class="navlink" data-page="weather">🌦️ Weather forecast</a>
     <a href="#" class="navlink" data-page="plants">🌱 Plant profiles</a>
     <a href="#" class="navlink" data-page="tank">💧 Water tank visual</a>
@@ -113,6 +114,64 @@
             <canvas id="c5"></canvas>
           </div>
         </div>
+      </div>
+    </section>
+
+
+    <!-- PAGE 3 : ENERGY MONITORING -->
+    <section class="page" id="page-energy">
+      <div class="energy-tabs">
+        <button class="energy-tab active" data-energy="pv">PV</button>
+        <button class="energy-tab" data-energy="battery">Battery</button>
+        <button class="energy-tab" data-energy="system">System</button>
+      </div>
+      <div class="card big">
+        <h2>⚡ Energy monitoring</h2>
+
+<div class="energy-grid">
+  <!-- PV -->
+  <div class="chartCard energy-group energy-pv">
+    <h3>PV Voltage (V)</h3>
+    <canvas id="e1"></canvas>
+  </div>
+
+  <div class="chartCard energy-group energy-pv">
+    <h3>PV Current (A)</h3>
+    <canvas id="e2"></canvas>
+  </div>
+
+  <div class="chartCard energy-group energy-pv">
+    <h3>PV Power (W)</h3>
+    <canvas id="e3"></canvas>
+  </div>
+
+  <!-- Battery -->
+  <div class="chartCard energy-group energy-battery hidden">
+    <h3>Battery Voltage (V)</h3>
+    <canvas id="e4"></canvas>
+  </div>
+
+  <div class="chartCard energy-group energy-battery hidden">
+    <h3>Battery Current (A)</h3>
+    <canvas id="e5"></canvas>
+  </div>
+
+  <div class="chartCard energy-group energy-battery hidden">
+    <h3>Battery Power (W)</h3>
+    <canvas id="e6"></canvas>
+  </div>
+
+  <!-- System -->
+  <div class="chartCard energy-group energy-system hidden">
+    <h3>System Voltage (V)</h3>
+    <canvas id="e7"></canvas>
+  </div>
+
+  <div class="chartCard energy-group energy-system hidden">
+    <h3>System Current (A)</h3>
+    <canvas id="e8"></canvas>
+  </div>
+</div>
       </div>
     </section>
 

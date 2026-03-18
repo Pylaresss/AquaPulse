@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const pages = {
     live: document.getElementById("page-live"),
     history: document.getElementById("page-history"),
+    energy: document.getElementById("page-energy"),
     weather: document.getElementById("page-weather"),
     plants: document.getElementById("page-plants"),
     tank: document.getElementById("page-tank"),
@@ -51,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Triggers spécifiques
     if (pageKey === "history") setTimeout(() => renderHistory?.(), 150);
+    if (pageKey === "energy") setTimeout(() => renderEnergy?.(), 150);
     if (pageKey === "weather") setTimeout(() => updateWeatherAlakamisy?.(), 150);
 
     closeMenu();
@@ -62,6 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
 // ===================== THINGSPEAK FETCH (Live data) =====================
 const channelID = "3278360";
 const readAPIKey = "ES3N0P9JR628IAKY"; // leave "" if channel is public
+
+const energyChannelID = "3292183";
+const energyReadAPIKey = "KTI0IKIKUC496ADS";
 
 function setText(id, txt) {
   const el = document.getElementById(id);
@@ -257,13 +262,47 @@ async function renderHistory() {
   makeChart("c5", s5.labels, s5.values);
 }
 
+async function fetchEnergyHistory(results = 120) {
+  const url = `https://api.thingspeak.com/channels/${energyChannelID}/feeds.json?api_key=${energyReadAPIKey}&results=${results}`;
+  const r = await fetch(url, { cache: "no-store" });
+  const data = await r.json();
+  return data.feeds || [];
+}
+
+async function renderEnergy() {
+  const results = 120;
+  const feeds = await fetchEnergyHistory(results);
+
+  const s1 = buildSeries(feeds, "field1"); // PV Voltage
+  const s2 = buildSeries(feeds, "field2"); // PV Current
+  const s3 = buildSeries(feeds, "field3"); // PV Power
+  const s4 = buildSeries(feeds, "field4"); // Battery Voltage
+  const s5 = buildSeries(feeds, "field5"); // Battery Current
+  const s6 = buildSeries(feeds, "field6"); // Battery Power
+  const s7 = buildSeries(feeds, "field7"); // System Voltage
+  const s8 = buildSeries(feeds, "field8"); // System Current
+
+  makeChart("e1", s1.labels, s1.values);
+  makeChart("e2", s2.labels, s2.values);
+  makeChart("e3", s3.labels, s3.values);
+  makeChart("e4", s4.labels, s4.values);
+  makeChart("e5", s5.labels, s5.values);
+  makeChart("e6", s6.labels, s6.values);
+  makeChart("e7", s7.labels, s7.values);
+  makeChart("e8", s8.labels, s8.values);
+}
+
 // History controls
 document.addEventListener("DOMContentLoaded", () => {
-  // Auto-refresh when history page is visible
   setInterval(() => {
     const histPage = document.getElementById("page-history");
     if (histPage && histPage.classList.contains("active")) {
       renderHistory();
+    }
+
+    const energyPage = document.getElementById("page-energy");
+    if (energyPage && energyPage.classList.contains("active")) {
+      renderEnergy();
     }
   }, 30000);
 });
@@ -293,9 +332,20 @@ async function updateWeatherAlakamisy() {
     const wind0 = w.daily.wind_speed_10m_max[0];
 
     // Rain next 24h = sum of first 24 hourly precipitation values
-    const rain24 = (w.hourly.precipitation || [])
-      .slice(0, 24)
-      .reduce((a, b) => a + (b || 0), 0);
+    const now = new Date();
+    const times = w.hourly.time || [];
+    const prec = w.hourly.precipitation || [];
+
+    let rain24 = 0;
+
+    for (let i = 0; i < times.length; i++) {
+      const t = new Date(times[i]);
+      const diffHours = (t - now) / (1000 * 60 * 60);
+
+      if (diffHours >= 0 && diffHours < 24) {
+        rain24 += prec[i] || 0;
+      }
+    }
 
     const elToday = document.getElementById("w_today");
     const elRain24 = document.getElementById("w_rain24");
@@ -479,5 +529,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const amount = getInputAmount();
     simulatedTankLevel = Math.max(0, simulatedTankLevel - amount);
     updateTankVisual(simulatedTankLevel);
+  });
+});
+
+// ===================== ENERGY TABS =====================
+document.addEventListener("DOMContentLoaded", () => {
+  const energyTabs = document.querySelectorAll(".energy-tab");
+  const energyGroups = document.querySelectorAll(".energy-group");
+
+  energyTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const selected = tab.dataset.energy;
+
+      energyTabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      energyGroups.forEach((group) => {
+        group.classList.add("hidden");
+
+        if (group.classList.contains(`energy-${selected}`)) {
+          group.classList.remove("hidden");
+        }
+      });
+    });
   });
 });

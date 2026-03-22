@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Sun'Drop Dashboard</title>
+  <title>SunDrop Dashboard</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -13,9 +13,9 @@
   <header class="topbar">
     <button class="hamburger" id="menuBtn">☰</button>
 
-    <img src="image/SunDrop.png" class="logo">
+    <img src="image/SunDrop.jpg" class="logo">
 
-    <h1 class="title">Sun'Drop Dashboard</h1>
+    <h1 class="title">SunDrop Dashboard</h1>
     <button id="darkModeToggle" class="dark-toggle">🌙</button>
   </header>
 
@@ -30,6 +30,7 @@
     <a href="#" class="navlink" data-page="history">📈 Sensors history</a>
     <a href="#" class="navlink" data-page="energy">⚡ Energy monitoring</a>
     <a href="#" class="navlink" data-page="weather">🌦️ Weather forecast</a>
+    <a href="#" class="navlink" data-page="warning">⚠️ Warnings</a>
     <a href="#" class="navlink" data-page="plants">🌱 Plant profiles</a>
     <a href="#" class="navlink" data-page="tank">💧 Water tank visual</a>
     <a href="#" class="navlink" data-page="about">ℹ️ About project</a>
@@ -173,6 +174,82 @@
     <canvas id="e8"></canvas>
   </div>
 </div>
+      </div>
+    </section>
+
+    <!-- PAGE : WARNINGS -->
+    <section class="page" id="page-warning">
+      <div class="card big">
+        <h2>⚠️ Warnings & alerts</h2>
+        <p class="hint">Real-time alerts and recommendations for the farmer.</p>
+
+        <div class="warning-grid">
+
+          <!-- Battery warning -->
+          <div class="warning-card">
+            <div class="warning-head">
+              <h3>Battery status</h3>
+              <span id="batteryBadge" class="warning-badge warning-ok">OK</span>
+            </div>
+
+            <p id="batteryWarningText">
+              Battery charge level is normal.
+            </p>
+
+            <div class="battery-visual">
+              <div class="battery-body">
+                <div class="battery-fill" id="batteryFill"></div>
+              </div>
+              <div class="battery-cap"></div>
+            </div>
+
+            <p class="warning-value" id="batteryPercentText">-- %</p>
+            <p class="warning-sub" id="batteryVoltageText">-- V</p>
+          </div>
+
+          <!-- Solar panel warning -->
+          <div class="warning-card">
+            <div class="warning-head">
+              <h3>Solar panel alert</h3>
+              <span id="pvBadge" class="warning-badge warning-ok">OK</span>
+            </div>
+
+            <p id="pvWarningText">
+              Solar panel power is normal.
+            </p>
+
+            <p class="warning-value" id="pvPowerText">-- W</p>
+          </div>
+
+          <!-- Water tank warning -->
+          <div class="warning-card">
+            <div class="warning-head">
+              <h3>Water tank alert</h3>
+              <span id="tankBadge" class="warning-badge warning-ok">OK</span>
+            </div>
+
+            <p id="tankWarningText">
+              Water tank level is sufficient.
+            </p>
+
+            <p class="warning-value" id="tankWarningPercent">-- %</p>
+          </div>
+
+          <!-- Temperature / irrigation warning -->
+          <div class="warning-card">
+            <div class="warning-head">
+              <h3>Temperature alert</h3>
+              <span id="tempBadge" class="warning-badge warning-ok">OK</span>
+            </div>
+
+            <p id="tempWarningText">
+              Temperature conditions are acceptable.
+            </p>
+
+            <p class="warning-value" id="tempWarningValue">-- °C</p>
+          </div>
+
+        </div>
       </div>
     </section>
 
@@ -326,88 +403,48 @@
     </section>
 
     <!-- PAGE 6 : ABOUT -->
-    <section class="page" id="page-about">
-
-    <div class="card big">
-
-    <h1>About the Project</h1>
-
-    <h2>Solar Powered Smart Irrigation System for Sustainable Agriculture</h2>
-
+<section class="page" id="page-about">
+  <div class="card big">
+    <h1>🌱 About the Project</h1>
+    <h2>Solar powered irrigation system for a sustainable agriculture</h2>
     <p>
-    Agriculture is one of the most important sectors worldwide, yet it faces major
-    challenges such as water scarcity, climate variability, and the need to optimize
-    energy consumption. Traditional irrigation systems often rely on manual operation
-    or fixed schedules, which can lead to inefficient water usage and unnecessary
-    energy consumption.
+      This project presents a smart solar-powered irrigation system designed to improve water management in rural agricultural environments. 
+      In regions such as Madagascar, irrigation is often manual and inefficient, leading to significant water losses. According to the FAO, up to 
+      <strong>30–60% of irrigation water can be lost</strong> due to poor control and system inefficiencies. 
+      Our solution aims to address this challenge by combining renewable energy, embedded control, and real-time monitoring.
+    </p>
+
+    <h2>System overview</h2>
+    <p>
+      The system is built around an ESP32 microcontroller connected to multiple sensors and actuators. 
+      It is powered by a photovoltaic panel coupled with a battery storage system, ensuring full autonomy from the electrical grid. 
+      Environmental conditions are continuously measured using soil moisture, temperature, and water level sensors. 
+      Based on these inputs, the system controls two key actuators: a water pump used to fill a storage tank, and an solenoid valve used to irrigate the field.
+      This architecture ensures a clear separation between water storage and irrigation functions, improving both reliability and energy efficiency.
+    </p>
+
+    <h2>Smart irrigation decision</h2>
+    <p>
+      The irrigation strategy is based on a decision algorithm that evaluates real-time sensor data and applies predefined thresholds and safety conditions. 
+      Irrigation is triggered only when soil moisture is below a critical level, the water tank contains sufficient water, and environmental conditions are suitable. 
+      To avoid unnecessary energy consumption and system instability, the pump and the electrovalve are never activated simultaneously. 
+      This control logic ensures optimal use of both water and energy resources while preventing over-irrigation and equipment stress.
+    </p>
+
+    <h2>IoT Monitoring platform</h2>
+    <p>
+      All system data is transmitted to a cloud platform and displayed on a web dashboard, allowing real-time monitoring from any device. 
+      Key parameters such as soil moisture, temperature, tank level, system status, and energy consumption are visualized in an intuitive interface. 
+      The platform also integrates warning indicators and decision-support tools, enabling the user to quickly identify critical situations such as low battery, low water level, or reduced solar production. 
+      This connectivity transforms the system into a smart decision-support tool rather than a simple automated device.
     </p>
 
     <p>
-    This project proposes a <b>solar-powered smart irrigation system</b> designed to
-    provide a sustainable and energy-efficient solution for small-scale agriculture.
-    The system combines renewable energy, environmental sensors, and IoT technologies
-    to automate irrigation based on real-time environmental conditions.
+      By combining intelligent control, renewable energy and remote monitoring, the system can reduce water consumption by up to 
+      <strong>30–50%</strong> compared to traditional irrigation methods, while improving reliability and reducing operational costs. 
+      It provides a scalable and sustainable solution adapted to smallholder farming conditions.
     </p>
 
-    <h2>System Overview</h2>
-
-    <p>
-    The irrigation system is powered by a photovoltaic solar panel that charges a
-    battery used to supply energy to the entire system. A microcontroller (ESP32)
-    collects data from several sensors installed in the environment.
-    </p>
-
-    <ul>
-    <li>Soil moisture sensor</li>
-    <li>Temperature and humidity sensor</li>
-    <li>Ultrasonic sensor to monitor water tank level</li>
-    <li>Energy monitoring sensors</li>
-    </ul>
-
-    <p>
-    Using this information, the system determines when irrigation is necessary and
-    automatically activates a water valve to irrigate the field.
-    </p>
-
-    <h2>Smart Irrigation Decision</h2>
-
-    <p>
-    Unlike traditional irrigation systems, this solution integrates a decision logic
-    based on environmental data and weather forecasts.
-    </p>
-
-    <ul>
-    <li>Soil humidity level</li>
-    <li>Current temperature</li>
-    <li>Water level in the tank</li>
-    <li>Weather forecast for the next 24 hours</li>
-    </ul>
-
-    <p>
-    For example, if rainfall is expected, the system can recommend delaying irrigation
-    to avoid wasting water.
-    </p>
-
-    <h2>IoT Monitoring Platform</h2>
-
-    <p>
-    All sensor data is transmitted to the cloud using the ESP32 Wi-Fi connectivity.
-    The data is stored and visualized using ThingSpeak, allowing users to monitor
-    the irrigation system remotely.
-    </p>
-
-    <p>
-    A custom web dashboard was developed to display:
-    </p>
-
-    <ul>
-    <li>Soil moisture level</li>
-    <li>Water tank level</li>
-    <li>Temperature</li>
-    <li>Irrigation status</li>
-    <li>Weather forecast</li>
-    <li>Irrigation recommendations</li>
-    </ul>
 
     <h2>Project Team</h2>
 
@@ -416,19 +453,19 @@
       <div class="team-member">
         <img src="image/eva.jpg" alt="Eva Blum">
         <h3>Eva Blum</h3>
-        <p>Project coordination</p>
+        <p>Software & control logic lead</p>
       </div>
 
       <div class="team-member">
         <img src="image/manon.jpg" alt="Manon Dhaine">
         <h3>Manon Dhaine</h3>
-        <p>System design</p>
+        <p>Hardware design lead</p>
       </div>
 
       <div class="team-member">
         <img src="image/jeany.jpg" alt="Jeany Han">
         <h3>Jeany Han</h3>
-        <p>IoT platform</p>
+        <p>Energy efficiency lead</p>
       </div>
 
     </div>

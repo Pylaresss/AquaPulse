@@ -1161,3 +1161,118 @@ body.dark .card.big p,
 body.dark .card.big li {
   color: #e5e7eb;
 }
+
+/* ===== WARNINGS PAGE ===== */
+.warning-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.warning-card{
+  background: rgba(255,255,255,0.82);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.14);
+}
+
+.warning-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.warning-head h3{
+  margin: 0;
+  font-size: 18px;
+}
+
+.warning-badge{
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  border: 1px solid rgba(0,0,0,0.12);
+}
+
+.warning-ok{
+  background: rgba(34,197,94,0.18);
+  border-color: rgba(34,197,94,0.30);
+}
+
+.warning-alert{
+  background: rgba(239,68,68,0.18);
+  border-color: rgba(239,68,68,0.30);
+}
+
+.warning-mid{
+  background: rgba(245,158,11,0.18);
+  border-color: rgba(245,158,11,0.30);
+}
+
+.warning-value{
+  font-size: 28px;
+  font-weight: 800;
+  margin: 14px 0 4px;
+}
+
+.warning-sub{
+  font-size: 14px;
+  opacity: 0.8;
+  margin: 0;
+}
+
+/* Battery visual */
+.battery-visual{
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.battery-body{
+  width: 160px;
+  height: 50px;
+  border: 3px solid #1f2937;
+  border-radius: 10px;
+  padding: 4px;
+  background: rgba(255,255,255,0.35);
+}
+
+.battery-cap{
+  width: 10px;
+  height: 22px;
+  border-radius: 3px;
+  background: #1f2937;
+}
+
+.battery-fill{
+  height: 100%;
+  width: 0%;
+  border-radius: 6px;
+  background: #22c55e;
+  transition: width 0.5s ease, background 0.3s ease;
+}
+
+/* Dark mode support */
+body.dark .warning-card{
+  background: linear-gradient(
+    135deg,
+    rgba(30, 41, 59, 0.72),
+    rgba(15, 23, 42, 0.58)
+  );
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+body.dark .battery-body{
+  border-color: #e5e7eb;
+}
+
+body.dark .battery-cap{
+  background: #e5e7eb;
+}
